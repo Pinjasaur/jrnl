@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+# Strict settings
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# Magic variables
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename "${__file}" .sh)"
+
+# Print out usage information
+usage() {
+  cat <<HEREDOC
+Usage:
+  ${__base} [<arguments>]
+
+  Creates a file in \$JRNL_DIR/YYYY/MM/DD.txt.
+
+Options:
+  -h --help  Show this.
+  -l --list  List entries.
+  <content>  Populate entry with <content>. If not set, open with \$EDITOR.
+HEREDOC
+}
+
+# List all entries
+list_entries() {
+  # Get all entries in $JRNL_DIR
+  shopt -s globstar nullglob
+  for entry in "${JRNL_DIR}"/**/*.txt; do
+    # Strip the $JRNL_DIR/ prefix
+    entry_path="${entry#$JRNL_DIR/}"
+    # ... and the .txt suffix
+    echo -e "${entry_path%.txt}"
+  done
+}
+
+# Make a new entry
+make_entry() {
+  # Create from today's date
+  entry_dir="$(date +%Y/%m)"
+  entry_name="$(date +%d)"
+
+  # Check directory exists
+  if [[ ! -d "${JRNL_DIR}/${entry_dir}" ]]; then
+    # Create it if necessary
+    mkdir -p "${JRNL_DIR}/${entry_dir}"
+  fi
+
+  # Does the entry already exist (is writeable?)
+  [[ -w "${JRNL_DIR}/${entry_dir}/${entry_name}.txt" ]] && exists=1
+  touch "${JRNL_DIR}/${entry_dir}/${entry_name}.txt"
+
+  # Visually delimit new entries
+  [[ "${exists:-}" == 1 ]] && echo -e "\n---\n" >> "${JRNL_DIR}/${entry_dir}/${entry_name}.txt"
+  # Append HH:MM (24-hour)
+  echo -e "$(date +%R)\n" >> "${JRNL_DIR}/${entry_dir}/${entry_name}.txt"
+
+  # Check for args
+  if [[ -z "${*:-}" ]]; then
+    $EDITOR "${JRNL_DIR}/${entry_dir}/${entry_name}.txt"
+  else
+    echo -e "${*:-}" >> "${JRNL_DIR}/${entry_dir}/${entry_name}.txt"
+  fi
+}
+
+# Drive it
+main() {
+  # Check if $JRNL_DIR is set
+  if [[ -z "${JRNL_DIR:-}" ]]; then
+    # If not, set to $HOME/Journal
+    JRNL_DIR="${HOME}/Journal"
+  fi
+
+  # Check directory exists
+  if [[ ! -d "${JRNL_DIR}" ]]; then
+    # Create it if necessary
+    mkdir -p "${JRNL_DIR}"
+  fi
+
+  # Parse arguments
+  if [[ "${1:-}" =~ ^-h|--help$ ]]; then
+    usage
+  elif [[ "${1:-}" =~ ^-l|--list$ ]]; then
+    list_entries
+  else
+    # Pass in args as a string, not array
+    make_entry "${*:-}"
+  fi
+}
+
+# Call it
+main "${@:-}"
