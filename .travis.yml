@@ -1,0 +1,4 @@
+language: shell
+
+script:
+  - shellcheck jrnl && bats test.bats
