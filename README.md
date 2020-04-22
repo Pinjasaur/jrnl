@@ -26,8 +26,8 @@ TODO
 
 ## Related
 
-- [jot] - Manage Markdown files from the CLI
-- [jt] - Creates timestamped notes (simplified version of [jot])
+- [jot] - Create & manage Markdown files from the CLI
+- [jt] - Quickly create timestamped notes (simplified version of [jot])
 
 ## License
 
