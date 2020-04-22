@@ -63,8 +63,6 @@ teardown() {
   [[ "${status}" == 0 ]]
 
   run cat "${JRNL_DIR}/${today}.txt"
-  echo -e "${output}" > outfile1
-  echo -e "${lines[@]}" >> outfile1
   [[ "${lines[2]}" == "${content}" ]]
   [[ "${status}" == 0 ]]
 }
