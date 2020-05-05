@@ -2,7 +2,14 @@
 
 [![Travis](https://img.shields.io/travis/Pinjasaur/jrnl.svg)](https://travis-ci.org/Pinjasaur/jrnl)
 
-TODO
+Frictionless journaling from the CLI.
+
+Each day is a discrete plaintext file: `$JRNL_DIR/YYYY/MM/DD.txt`. Each entry
+added will auto-prepend the time. Multiple entries in a single day will be
+delimitted with Markdown-style `---` notation.
+
+You can choose to add content directly from the CLI or edit an entry in your
+preferrered `$EDITOR`.
 
 ## Installation
 
@@ -22,7 +29,19 @@ You'll also want to make sure `$EDITOR` is set to your preferred editor
 
 ## Usage
 
-TODO
+Run `jrnl` to start writing. You can list entries with `jrnl --list` and show
+the usage info with `jrnl --help`:
+
+```
+jrnl [<arguments>]
+
+  Creates a file in $JRNL_DIR/YYYY/MM/DD.txt.
+
+Options:
+  -h --help  Show this.
+  -l --list  List entries.
+  <content>  Populate entry with <content>. If not set, open with $EDITOR.
+```
 
 ## Related
 
