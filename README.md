@@ -13,6 +13,8 @@ preferrered `$EDITOR`.
 
 ## Installation
 
+Requires Bash >= 4 (for [`globstar`][globstar]).
+
 Add the [`jrnl` script](/jrnl) to your `$PATH` or create a function similar to:
 
 ```bash
@@ -55,3 +57,4 @@ Options:
 [jot]: https://github.com/Pinjasaur/jot
 [jt]: https://github.com/Pinjasaur/jt
 [license]: https://pinjasaur.mit-license.org/2020
+[globstar]: https://www.linuxjournal.com/content/globstar-new-bash-globbing-option
